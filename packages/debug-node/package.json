@@ -1,0 +1,24 @@
+{
+  "name": "debug-node",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "bundle": "esbuild src/index.ts --outdir=dist --bundle --sourcemap=inline --minify --platform=node",
+    "docker-build": "docker build ../../ -f ./dockerfile -t debug-node",
+    "docker-run": "docker run --name debug-node -p 3000:3000 -p 9229:9229 -d debug-node"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "lib-a": "*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.28",
+    "esbuild": "^0.20.2",
+    "typescript": "^5.4.2"
+  }
+}

@@ -1,0 +1,33 @@
+FROM node:20-alpine as meta
+
+WORKDIR /app
+
+COPY . .
+
+RUN chmod u+x ./meta.sh
+
+RUN ./meta.sh
+
+FROM node:20-alpine as build
+
+WORKDIR /app
+
+COPY --from=meta /app/meta  ./
+
+RUN npm ci
+
+COPY . .
+
+RUN npx nx run debug-node:bundle  --skip-nx-cache
+
+FROM node:20-alpine
+
+WORKDIR /app
+
+COPY --from=build /app/packages/node-debug/package.json ./package.json
+
+COPY --from=build /app/packages/node-debug/dist ./dist
+
+EXPOSE 3000
+
+CMD ["node", "--inspect=0.0.0.0:9229", "--enable-source-maps", "/app/dist/index.js"]
